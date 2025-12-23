@@ -76,21 +76,21 @@ func print(diskUsage *disk.UsageStat, cpuInfo []cpu.InfoStat, cpuPercent []float
 
 	fmt.Printf("\033[5;0H")
 	fmt.Printf("┃ %sCPU Used:%s    ", Blue, Reset)
-	printBar(int(cpuPercent[0]))
+	printProgressBar(int(cpuPercent[0]))
 	fmt.Printf(" [%.2f%%]", cpuPercent[0])
 	fmt.Printf("\033[5;36H")
 	fmt.Printf("┃\n")
 
 	fmt.Printf("\033[6;0H")
 	fmt.Printf("┃ %sDisk Used:%s   ", Green, Reset)
-	printBar(int(diskUsage.UsedPercent))
+	printProgressBar(int(diskUsage.UsedPercent))
 	fmt.Printf(" [%.2f%%]", diskUsage.UsedPercent)
 	fmt.Printf("\033[6;36H")
 	fmt.Printf("┃\n")
 
 	fmt.Printf("\033[7;0H")
 	fmt.Printf("┃ %sMemory Used:%s ", Yellow, Reset)
-	printBar(int(memoryInfo.UsedPercent))
+	printProgressBar(int(memoryInfo.UsedPercent))
 	fmt.Printf(" [%.2f%%]", memoryInfo.UsedPercent)
 	fmt.Printf("\033[7;36H")
 	fmt.Printf("┃\n")
@@ -102,17 +102,24 @@ func print(diskUsage *disk.UsageStat, cpuInfo []cpu.InfoStat, cpuPercent []float
 	time.Sleep(1 * time.Second)
 }
 
-func printBar(progress int) {
-	progress = progress / 10
+func printProgressBar(progress int) {
+	base := 10
+	p2 := float64(progress) / 100.0
+	p3 := p2 * float64(base)
+	progress = int(p3)
 
-	for i := 0; i < progress; i++ {
+	if progress < 100/base {
+		progress = base
+	}
+
+	for i := 0; i <= progress; i++ {
 		fmt.Printf("█")
 	}
 
-	for i := 0; i < 10-progress; i++ {
+	for i := progress; i < base-1; i++ {
 		fmt.Printf("░")
 	}
-	// progress 50 Should output █████░░░░░
+	// progress 50 base 10 Should output █████░░░░░
 }
 
 func main() {
