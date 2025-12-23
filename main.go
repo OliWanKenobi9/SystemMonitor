@@ -52,11 +52,17 @@ func ClearScreen() {
 	if runtime.GOOS == "windows" {
 		cmd := exec.Command("cmd", "/c", "cls")
 		cmd.Stdout = os.Stdout
-		cmd.Run()
+		err := cmd.Run()
+		if err != nil {
+			return
+		}
 	} else {
 		cmd := exec.Command("clear")
 		cmd.Stdout = os.Stdout
-		cmd.Run()
+		err := cmd.Run()
+		if err != nil {
+			return
+		}
 	}
 }
 
@@ -65,7 +71,7 @@ func printValue(value string, cursorTop int, cursorLeft int, screenWidth int) {
 	fmt.Printf("\033[%d;%dH┃\n", cursorTop, screenWidth)
 }
 
-func print(diskUsage *disk.UsageStat, cpuInfo []cpu.InfoStat, cpuPercent []float64, memoryInfo *mem.VirtualMemoryStat, err error) {
+func printMenu(diskUsage *disk.UsageStat, cpuInfo []cpu.InfoStat, cpuPercent []float64, memoryInfo *mem.VirtualMemoryStat, err error) {
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -76,14 +82,14 @@ func print(diskUsage *disk.UsageStat, cpuInfo []cpu.InfoStat, cpuPercent []float
 
 	printValue(fmt.Sprintf("┃ %sCPU Model:  %s %s", Blue, Reset, cpuInfo[0].ModelName), 4, 0, 36)
 
-	cpuBar := fmt.Sprintf("┃ %sCPU Used:%s    %s [%.2f%%]", Blue, Reset, getProgressBar(int(cpuPercent[0]), 10), cpuPercent[0])
-	printValue(cpuBar, 5, 0, 36)
+	cpuLine := fmt.Sprintf("┃ %sCPU Used:%s    %s [%.2f%%]", Blue, Reset, getProgressBar(int(cpuPercent[0]), 10), cpuPercent[0])
+	printValue(cpuLine, 5, 0, 36)
 
-	diskBar := fmt.Sprintf("┃ %sDisk Used:%s   %s [%.2f%%]", Green, Reset, getProgressBar(int(diskUsage.UsedPercent), 10), diskUsage.UsedPercent)
-	printValue(diskBar, 6, 0, 36)
+	diskLine := fmt.Sprintf("┃ %sDisk Used:%s   %s [%.2f%%]", Green, Reset, getProgressBar(int(diskUsage.UsedPercent), 10), diskUsage.UsedPercent)
+	printValue(diskLine, 6, 0, 36)
 
-	memBar := fmt.Sprintf("┃ %sMemory Used:%s %s [%.2f%%]", Yellow, Reset, getProgressBar(int(memoryInfo.UsedPercent), 10), memoryInfo.UsedPercent)
-	printValue(memBar, 7, 0, 36)
+	memLine := fmt.Sprintf("┃ %sMemory Used:%s %s [%.2f%%]", Yellow, Reset, getProgressBar(int(memoryInfo.UsedPercent), 10), memoryInfo.UsedPercent)
+	printValue(memLine, 7, 0, 36)
 
 	fmt.Printf("\033[8;0H")
 	fmt.Printf("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛\n")
@@ -112,6 +118,6 @@ func main() {
 	for {
 		diskUsage, cpuInfo, cpuPercent, memoryInfo, err := getData()
 		ClearScreen()
-		print(diskUsage, cpuInfo, cpuPercent, memoryInfo, err)
+		printMenu(diskUsage, cpuInfo, cpuPercent, memoryInfo, err)
 	}
 }
