@@ -86,7 +86,6 @@ func printMenu(diskUsage *disk.UsageStat, cpuInfo []cpu.InfoStat, cpuPercent []f
 
 	cpuLine := fmt.Sprintf("┃ %sCPU Used:%s    %s [%.2f%%]", Blue, Reset, getProgressBar(int(cpuPercent[0]), 10), cpuPercent[0])
 	printValue(cpuLine, 5, 0, 36)
-
 	diskLine := fmt.Sprintf("┃ %sDisk Used:%s   %s [%.2f%%]", Green, Reset, getProgressBar(int(diskUsage.UsedPercent), 10), diskUsage.UsedPercent)
 	printValue(diskLine, 6, 0, 36)
 
@@ -106,12 +105,12 @@ func getProgressBar(progress int, base int) string {
 	progress = int(p3)
 
 	bar := ""
-	for i := 0; i <= progress; i++ {
-		bar += "█"
-	}
-
-	for i := progress; i < base-1; i++ {
-		bar += "░"
+	for i := 0; i < base; i++ {
+		if i < progress {
+			bar += "█"
+		} else {
+			bar += "░"
+		}
 	}
 	return bar
 }
