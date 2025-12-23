@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"time"
 
 	"github.com/shirou/gopsutil/v4/cpu"
@@ -10,27 +9,36 @@ import (
 	"github.com/shirou/gopsutil/v4/mem"
 )
 
+func getData() (*disk.UsageStat, []cpu.InfoStat, []float64, *mem.VirtualMemoryStat, error) {
+	diskUsage, err := disk.Usage("/")
+	if err != nil {
+		return nil, nil, nil, nil, err
+	}
+
+	cpuInfo, err := cpu.Info()
+	if err != nil {
+		return nil, nil, nil, nil, err
+	}
+
+	cpuPercent, err := cpu.Percent(time.Second, false)
+	if err != nil {
+		return nil, nil, nil, nil, err
+	}
+
+	memoryInfo, err := mem.VirtualMemory()
+	if err != nil {
+		return nil, nil, nil, nil, err
+	}
+
+	return diskUsage, cpuInfo, cpuPercent, memoryInfo, nil
+}
+
 func print() {
 	for {
-		diskUsage, err := disk.Usage("/")
-		if err != nil {
-			log.Fatal(err)
-		}
+		diskUsage, cpuInfo, cpuPercent, memoryInfo, err := getData()
 
-		cpuInfo, err := cpu.Info()
 		if err != nil {
-			log.Fatal(err)
-		}
-
-		cpuPercent, err := cpu.Percent(time.Second, false)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		// Get memory info
-		memoryInfo, err := mem.VirtualMemory()
-		if err != nil {
-			log.Fatal(err)
+			fmt.Println(err)
 		}
 
 		fmt.Println("---System Monitor---")
