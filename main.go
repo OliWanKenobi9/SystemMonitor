@@ -61,10 +61,8 @@ func ClearScreen() {
 }
 
 func printValue(value string, cursorTop int, cursorLeft int, screenWidth int) {
-	fmt.Printf("\033[", cursorTop, ";", cursorLeft, "H") // Set cursor
-	fmt.Printf(value)
-	fmt.Printf("\033[", cursorTop, ";", screenWidth, "H") // Print Edge
-	fmt.Printf("┃\n")
+	fmt.Printf("\033[%d;%dH%s", cursorTop, cursorLeft, value)
+	fmt.Printf("\033[%d;%dH┃\n", cursorTop, screenWidth)
 }
 
 func print(diskUsage *disk.UsageStat, cpuInfo []cpu.InfoStat, cpuPercent []float64, memoryInfo *mem.VirtualMemoryStat, err error) {
@@ -111,7 +109,6 @@ func getProgressBar(progress int, base int) string {
 }
 
 func main() {
-
 	for {
 		diskUsage, cpuInfo, cpuPercent, memoryInfo, err := getData()
 		ClearScreen()
