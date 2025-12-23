@@ -65,6 +65,8 @@ func print(diskUsage *disk.UsageStat, cpuInfo []cpu.InfoStat, cpuPercent []float
 		fmt.Println(err)
 	}
 
+	var memUsed int = int(memoryInfo.UsedPercent)
+
 	fmt.Println("┏━━━━━━━━━━━━━━━━━━━━━━━━┓")
 	fmt.Println("┃  ", Cyan, Bold, "System Monitor", Reset, "   ┃")
 	fmt.Println("┣━━━━━━━━━━━━━━━━━━━━━━━━┫")
@@ -85,14 +87,29 @@ func print(diskUsage *disk.UsageStat, cpuInfo []cpu.InfoStat, cpuPercent []float
 	fmt.Printf("┃\n")
 
 	fmt.Printf("\033[7;0H")
-	fmt.Printf("┃ Memory Used: %.2f%%\n", memoryInfo.UsedPercent)
+	fmt.Printf("┃ Memory Used: ")
+	printBar(memUsed)
 	fmt.Printf("\033[7;26H")
 	fmt.Printf("┃\n")
 
 	fmt.Printf("\033[8;0H")
 	fmt.Printf("┗━━━━━━━━━━━━━━━━━━━━━━━━┛")
 
+	fmt.Printf("\033[9;0H")
 	time.Sleep(2 * time.Second)
+}
+
+func printBar(progress int) {
+	progress = progress / 10
+
+	for i := 0; i < progress; i++ {
+		fmt.Printf("█")
+	}
+
+	for i := 0; i < 10-progress; i++ {
+		fmt.Printf("░")
+	}
+	// progress 50 Should output █████░░░░░
 }
 
 func main() {
@@ -102,5 +119,4 @@ func main() {
 		ClearScreen()
 		print(diskUsage, cpuInfo, cpuPercent, memoryInfo, err)
 	}
-
 }
