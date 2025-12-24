@@ -185,7 +185,7 @@ func PrintNetMenu(netInfo []net.IOCountersStat, selection int, err error) {
 	header4 := fmt.Sprintf("┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫\n")
 	PrintValue(header4, 6, ScreenWidth+10, ScreenWidth)
 
-	nameLine := fmt.Sprintf("┃ %s%sName:%s        [%s]", Magenta, Bold, Reset, netInfo[selection].Name)
+	nameLine := fmt.Sprintf("┃ %s%sName:%s        [%s]", Yellow, Bold, Reset, netInfo[selection].Name)
 	PrintValue(nameLine, 7, ScreenWidth+10, ScreenWidth)
 	PrintValue("┃", 7, ScreenWidth+9+ScreenWidth, ScreenWidth)
 
@@ -278,6 +278,6 @@ func main() {
 		PrintMainMenu(diskUsage, cpuInfo, cpuPercent, memoryInfo, netInfo, temperatureInfo, err, float64(BytesRecvDelta))
 		PrintNetMenu(netInfo, selection, err)
 
-		time.Sleep(100 * time.Millisecond)
+		time.Sleep(10 * time.Millisecond)
 	}
 }
