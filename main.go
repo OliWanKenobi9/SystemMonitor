@@ -94,10 +94,14 @@ func PrintMenu(diskUsage *disk.UsageStat, cpuInfo []cpu.InfoStat, cpuPercent []f
 		padding = 1
 		modelLine = fmt.Sprintf("┃ %sCPU Model:   %s%s%s%s\n┃              %s",
 			Blue, Reset, cpuInfo[0].ModelName[:18], "-", Reset, cpuInfo[0].ModelName[18:])
+
+		printValue(modelLine, 4, 0, 36)
+		fmt.Printf("\033[5;36H")
+		fmt.Printf("┃")
 	} else {
 		modelLine = fmt.Sprintf("┃ %sCPU Model:  %s %s", Blue, Reset, cpuInfo[0].ModelName+" ┃")
+		printValue(modelLine, 4, 0, 36)
 	}
-	printValue(modelLine, 4, 0, 36)
 
 	cpuLine := fmt.Sprintf("┃ %sCPU Used:%s    %s [%.2f%%]", Blue, Reset, GetProgressBar(int(cpuPercent[0]), 10), cpuPercent[0])
 	printValue(cpuLine, 5+padding, 0, 36)
