@@ -122,22 +122,28 @@ func PrintMainMenu(diskUsage *disk.UsageStat, cpuInfo []cpu.InfoStat, cpuPercent
 		PrintValue(modelLine, 4, 0, ScreenWidth)
 		fmt.Printf("\033[5;%sH", ScreenWidth) // Set cursor
 		fmt.Printf("┃")
+		PrintValue("┃", 4+padding, ScreenWidth, ScreenWidth)
 	} else {
 		modelLine = fmt.Sprintf("┃ %s%sCPU Model:  %s %s", Blue, Bold, Reset, cpuInfo[0].ModelName)
 		PrintValue(modelLine, 4, 0, ScreenWidth)
+		PrintValue("┃", 4+padding, ScreenWidth, ScreenWidth)
 	}
 
 	cpuLine := fmt.Sprintf("┃ %s%sCPU Used:%s    %s [%.2f%%]", Blue, Bold, Reset, GetProgressBar(int(cpuPercent[0]), 10), cpuPercent[0])
 	PrintValue(cpuLine, 5+padding, 0, ScreenWidth)
+	PrintValue("┃", 5+padding, ScreenWidth, ScreenWidth)
 
 	memLine := fmt.Sprintf("┃ %s%sMemory Used:%s %s [%.2f%%]", Yellow, Bold, Reset, GetProgressBar(int(memoryInfo.UsedPercent), 10), memoryInfo.UsedPercent)
 	PrintValue(memLine, 7+padding, 0, ScreenWidth)
+	PrintValue("┃", 7+padding, ScreenWidth, ScreenWidth)
 
 	diskLine := fmt.Sprintf("┃ %s%sDisk Used:%s   %s [%.2f%%]", Green, Bold, Reset, GetProgressBar(int(diskUsage.UsedPercent), 10), diskUsage.UsedPercent)
 	PrintValue(diskLine, 6+padding, 0, ScreenWidth)
+	PrintValue("┃", 6+padding, ScreenWidth, ScreenWidth)
 
 	tempLine := fmt.Sprintf("┃ %s%sTemps:%s       [%.2f°C]", Red, Bold, Reset, tempInfo[0].Temperature)
 	PrintValue(tempLine, 8+padding, 0, ScreenWidth)
+	PrintValue("┃", 8+padding, ScreenWidth, ScreenWidth)
 
 	prefixes := [6]string{"B", "KiB", "MiB", "GiB", "TiB", "PiB"}
 	i := 0
@@ -146,6 +152,7 @@ func PrintMainMenu(diskUsage *disk.UsageStat, cpuInfo []cpu.InfoStat, cpuPercent
 	}
 	netLine := fmt.Sprintf("┃ %s%sNetwork:%s     [%.2f%s]", Magenta, Bold, Reset, BytesRecvDelta, prefixes[i])
 	PrintValue(netLine, 9+padding, 0, ScreenWidth)
+	PrintValue("┃", 9+padding, ScreenWidth, ScreenWidth)
 
 	fmt.Printf("\033[%d;0H", 10+padding)
 	fmt.Printf("┗━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┛\n")
@@ -153,6 +160,9 @@ func PrintMainMenu(diskUsage *disk.UsageStat, cpuInfo []cpu.InfoStat, cpuPercent
 }
 
 func PrintNetMenu(netInfo []net.IOCountersStat, err error) {
+	/*
+	 * Arrow <- -> to cycle through netInfo Elements (Name, Packets sent, recv...)
+	 */
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -165,6 +175,10 @@ func PrintNetMenu(netInfo []net.IOCountersStat, err error) {
 
 	header3 := fmt.Sprintf("┣━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┫\n")
 	PrintValue(header3, 3, ScreenWidth+10, ScreenWidth)
+
+	connectionsLine := fmt.Sprintf("┃ %s%sConnections:%s [%d]", Magenta, Bold, Reset, len(netInfo))
+	PrintValue(connectionsLine, 4, ScreenWidth+10, ScreenWidth)
+	PrintValue("┃", 4, ScreenWidth+9+ScreenWidth, ScreenWidth)
 
 }
 
