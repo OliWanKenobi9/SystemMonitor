@@ -89,12 +89,13 @@ func PrintMenu(diskUsage *disk.UsageStat, cpuInfo []cpu.InfoStat, cpuPercent []f
 
 	padding := 0
 	modelLine := ""
+	cpuInfo[0].ModelName = "Intel Core i9-13900KS Processor"
 	if len(cpuInfo[0].ModelName) > 19 {
 		padding = 1
-		modelLine = fmt.Sprintf("┃ %sCPU Model:   %s%s%s\n┃              %s",
-			Blue, Reset, cpuInfo[0].ModelName[:18], "-", cpuInfo[0].ModelName[18:])
+		modelLine = fmt.Sprintf("┃ %sCPU Model:   %s%s%s%s\n┃              %s",
+			Blue, Reset, cpuInfo[0].ModelName[:18], "-", Reset, cpuInfo[0].ModelName[18:])
 	} else {
-		modelLine = fmt.Sprintf("┃ %sCPU Model:  %s %s", Blue, Reset, cpuInfo[0].ModelName)
+		modelLine = fmt.Sprintf("┃ %sCPU Model:  %s %s", Blue, Reset, cpuInfo[0].ModelName+" ┃")
 	}
 	printValue(modelLine, 4, 0, 36)
 
